@@ -19,22 +19,7 @@ A production-ready REST API for a cosmetic e-commerce store built with Node.js, 
 - Admin dashboard statistics
 - Image upload support
 
-## Project Structure
 
-├── controllers/
-│   ├── authController.js
-│   ├── categoryController.js
-│   ├── productController.js
-│   └── orderController.js
-├── middlewares/
-│   ├── auth.js
-│   ├── errorHandler.js
-│   └── upload.js
-├── routes/
-│   └── index.js
-├── db.js
-├── db.sql
-└── server.js
 
 ## API Endpoints
 
