@@ -18,15 +18,14 @@ const login = async (req, res, next) => {
       });
     }
 
-    // 2. Find user by email
-    //    toLowerCase + trim handles 'Admin@Test.COM ' → 'admin@test.com'
+    
     const { rows } = await query(
       `SELECT id, name, email, password, role, is_active
        FROM users WHERE email = $1`,
       [email.toLowerCase().trim()]
     );
 
-    // 3. User not found
+   
    
     if (!rows.length) {
       return res.status(401).json({
@@ -37,7 +36,7 @@ const login = async (req, res, next) => {
 
     const user = rows[0];
 
-    // 4. Check if account is active
+    
     if (!user.is_active) {
       return res.status(401).json({
         success: false,
@@ -45,7 +44,7 @@ const login = async (req, res, next) => {
       });
     }
 
-    // 5. Compare plain password with hashed password in DB
+    
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(401).json({
@@ -54,17 +53,14 @@ const login = async (req, res, next) => {
       });
     }
 
-    // 6. Generate JWT token
-    //    payload   → stored inside the token
-    //    secret    → used to sign and verify
-    //    expiresIn → token dies after 7 days
+   
     const token = jwt.sign(
       { id: user.id, role: user.role },
       process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
     );
 
-    // 7. Send response — NEVER send the password back
+   
     res.json({
       success: true,
       message: 'Login successful',
@@ -84,10 +80,7 @@ const login = async (req, res, next) => {
   }
 };
 
-// ─────────────────────────────────────────────
-// GET /api/auth/me
-// Protected — authenticate middleware runs first
-// req.user is already set — no DB query needed
+
 // ─────────────────────────────────────────────
 const getMe = (req, res) => {
   res.json({
@@ -96,10 +89,6 @@ const getMe = (req, res) => {
   });
 };
 
-// ─────────────────────────────────────────────
-// POST /api/auth/change-password
-// Protected — authenticate middleware runs first
-// ─────────────────────────────────────────────
 const changePassword = async (req, res, next) => {
   try {
     const { currentPassword, newPassword } = req.body;
